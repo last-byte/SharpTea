@@ -48,7 +48,7 @@ namespace SharpTea
         }
 
         // decrypt encrypted bytes
-        static public byte[] GetDecryptedBytes(byte[] toDecrypt, byte[] key)
+        static public byte[] GetDecryptedBytes(byte[] toDecrypt, byte[] key, byte padding = 0x90)
         {
             // throw exception if the key is not 16 byte long
             if (key.Length != 16)
@@ -104,6 +104,16 @@ namespace SharpTea
                 }
             }
 
+            for (int i = cleartext.Count - 1; i > -1; i--)
+            {
+                if (cleartext[i] == padding)
+                {
+                    cleartext.RemoveAt(i);
+                    continue;
+                }
+                else break;
+            }
+
             // create a byte array from the cleartext byte list and return it
             var decrypted = cleartext.ToArray();
             return decrypted;
@@ -113,37 +123,37 @@ namespace SharpTea
         // define a wrapper around GetDecryptedBytes which can take also strings
 
         // decrypt bytes using string key
-        static public string GetDecryptedString(byte[] toDecrypt, string key)
+        static public string GetDecryptedString(byte[] toDecrypt, string key, byte padding = 0x90)
         {
             var keyBytes = Encoding.ASCII.GetBytes(key);
-            var decryptedBytes = GetDecryptedBytes(toDecrypt, keyBytes);
+            var decryptedBytes = GetDecryptedBytes(toDecrypt, keyBytes, padding);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
 
         // decrypt base64 string using string key
-        static public string GetDecryptedString(string toDecrypt, string key)
+        static public string GetDecryptedString(string toDecrypt, string key, byte padding = 0x90)
         {
             var encryptedBytes = Convert.FromBase64String(toDecrypt);
             var keyBytes = Encoding.ASCII.GetBytes(key);
-            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes);
+            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes, padding);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
 
         // decrypt base64 string using byte key
-        static public string GetDecryptedStringFromBase64(string toDecrypt, byte[] key)
+        static public string GetDecryptedStringFromBase64(string toDecrypt, byte[] key, byte padding = 0x90)
         {
             var encryptedBytes = Convert.FromBase64String(toDecrypt);
             var keyBytes = key;
-            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes);
+            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes, padding);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
 
         // decrypt base64 string using base64 key
-        static public string GetDecryptedStringFromBase64(string toDecrypt, string key)
+        static public string GetDecryptedStringFromBase64(string toDecrypt, string key, byte padding = 0x90)
         {
             var encryptedBytes = Convert.FromBase64String(toDecrypt);
             var keyBytes = Convert.FromBase64String(key);
-            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes);
+            var decryptedBytes = GetDecryptedBytes(encryptedBytes, keyBytes, padding);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
     }

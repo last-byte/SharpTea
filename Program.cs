@@ -9,8 +9,8 @@ namespace SharpTea
         {
             // key and cleartext can either be a string, a byte array or a base64 string
             // function overloading takes care of conversion :)
-            var key = "VoidsexIsTheBest";
-            var cleartext = "0123456789ABCDEF";
+            var key = "ThisIs16ByteLong";
+            var cleartext = "Look at me :D";
 
             Console.WriteLine($"Cleartext is: {cleartext}");
             Console.WriteLine($"Key is: {key}");
